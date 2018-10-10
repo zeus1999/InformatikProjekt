@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="./public/assets/socket.io/socket.io.js"></script>
+    <script src="./public/assets/polyfill.io/index.js"></script>
+    <script src="./public/src/script/app.js"></script>    
+</head>
+<body>
+    
+    <input type="file" id="file">
+    <input type="submit" id="submit">
+    
+    <script>
+
+        var submit = document.getElementById("submit");
+        var file = document.getElementById("file");
+
+        submit.addEventListener("click", function(event){
+            
+            sendFile("/upload", file.files[0], (r) => {
+
+            });
+
+        });
+      
+    
+    </script>
+</body>
+</html>
