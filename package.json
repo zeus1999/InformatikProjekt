@@ -17,6 +17,10 @@
   },
   "homepage": "https://github.com/zeus1999/InformatikProjekt#readme",
   "dependencies": {
+    "connect-busboy": "0.0.2",
+    "express": "^4.16.4",
+    "fs": "0.0.1-security",
+    "path": "^0.12.7",
     "socket.io": "^2.1.1"
   }
 }
