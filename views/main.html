@@ -8,21 +8,27 @@
     <script src="./public/assets/angular/angular.min.js"></script>
     <script src="./public/assets/angular-aria/angular-aria.min.js"></script>
     <script src="./public/assets/angular-animate/angular-animate.min.js"></script>
+    <script src="./public/assets/angular-route/angular-route.min.js"></script>
     <script src="./public/assets/angular-material/angular-material.min.js"></script>
     <script src="./public/src/script/app.js"></script>
+    <base href="/">
 
     <link rel="stylesheet" type="text/css" href="./public/assets/angular-material/angular-material.min.css">
+    <link rel="stylesheet" type="text/css" href="./public/src/style/style.css">
+
 </head>
 <body ng-app="projekt">
 
     <md-toolbar class="md-primary">
         <div layout="row">
           <h2 class="md-toolbar-tools">
-            <span>Informatik Projekt</span>
+            <span ng-click="open('/')">Informatik Projekt</span>
+            <span flex></span>
           </h2>
         </div>
       </md-toolbar>
-      <md-menu-bar>
+      <div ng-view></div>
+     <!-- <md-menu-bar>
         <md-menu>
           <button ng-click="$mdMenu.open()">
             File
@@ -72,14 +78,12 @@
           </button>
           <md-menu-content>
             <md-menu-item class="md-indent">
-              <md-icon md-svg-icon="undo"></md-icon>
               <md-button ng-click="ctrl.sampleAction('undo', $event)">
                 Undo
                 <span class="md-alt-text">{{ 'M-Z' | keyboardShortcut }}</span>
               </md-button>
             </md-menu-item>
             <md-menu-item class="md-indent">
-              <md-icon md-svg-icon="redo"></md-icon>
               <md-button ng-click="ctrl.sampleAction('redo', $event)">
                 Redo
                 <span class="md-alt-text">{{ 'M-Y' | keyboardShortcut }}</span>
@@ -87,14 +91,12 @@
             </md-menu-item>
             <md-menu-divider></md-menu-divider>
             <md-menu-item class="md-indent">
-              <md-icon md-svg-icon="content-cut"></md-icon>
               <md-button ng-click="ctrl.sampleAction('cut', $event)">
                 Cut
                 <span class="md-alt-text">{{ 'M-X' | keyboardShortcut }}</span>
               </md-button>
             </md-menu-item>
             <md-menu-item class="md-indent">
-              <md-icon md-svg-icon="content-copy"></md-icon>
               <md-button ng-click="ctrl.sampleAction('copy', $event)">
                 Copy
                 <span class="md-alt-text">{{ 'M-C' | keyboardShortcut }}</span>
@@ -187,7 +189,17 @@
           </md-menu-content>
         </md-menu>
       </md-menu-bar>
-  
+    -->
+    <!--<div >
+      <md-content class="md-padding" layout-sm="column" layout="row">
+        <div flex-sm flex-gt-sm="25" layout="column">
+          <md-card class="md-warn">
+           a
+          </md-card>
+        </div>
+      </md-content>
+    </div>-->
+    
 
-</body>
+  </body>
 </html>

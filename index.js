@@ -9,11 +9,13 @@ var io = require("socket.io")(server);
 var route = require("./route.js")(app);
 var config = require("./config.js");
 
-//route
-app.use("/", route);
 
 //static folder
 app.use("/public", express.static("public"));
+
+//route
+app.use("/", route);
+
 
 //socket server
 require("./socket.js")(io);

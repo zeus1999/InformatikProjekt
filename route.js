@@ -5,16 +5,11 @@ module.exports = (app) => {
 
     var routes = {
         get: {
-            socket: require("./routes/get/socket.js"),
-            main: require("./routes/get/main.js"),
-            upload: require("./routes/get/upload.js")
-        },
-        post: {
-            upload: require("./routes/post/upload.js")(app)
+            main: require("./routes/get/main.js")
         }
     };
 
-    router.use("/", routes.get.main);
+    router.use("*", routes.get.main);
 
     //get upload
     //router.use("/upload", routes.get.upload);
