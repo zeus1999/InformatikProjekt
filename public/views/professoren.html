@@ -1,3 +1,10 @@
-<md-content class="md-padding" ng-controller="linksCtrl">
-
+<md-content class="md-padding">
+    <md-card ng-repeat="x in profs">    
+        <md-card-title>
+            <md-card-title-text>
+                <span class="md-headline">{{ x.titel + " " + x.vorname + " " + x.nachname }}</span>
+                <span class="md-subhead"></span>
+            </md-card-title-text>
+        </md-card-title>
+    </md-card>
 </md-content>

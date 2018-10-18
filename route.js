@@ -1,15 +1,28 @@
 var express = require("express");
 var router = express.Router();
+var mongoose = require("mongoose");
+var mongoDB = "mongodb://127.0.0.1/student_helper";
+mongoose.connect(mongoDB);
 
 module.exports = (app) => {
 
-    var routes = {
-        get: {
-            main: require("./routes/get/main.js")
-        }
-    };
+    async function getProfs(){
+        var ProfModel = require("./models/profs.js");
+        var data = await ProfModel.find({}, "-_id -__v").lean().exec();
+        console.log(data);
+        
+        return data;
+    }
 
-    router.use("*", routes.get.main);
+    router.use("/rest/profs", async function(req, res){
+
+        var data = await getProfs();
+        res.send(data);
+    
+    });
+    
+
+    router.use("*", require("./routes/get/main.js"));
 
     //get upload
     //router.use("/upload", routes.get.upload);
