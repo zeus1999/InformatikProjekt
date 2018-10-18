@@ -1,0 +1,16 @@
+<md-content class="md-padding">
+        <md-card class="md-padding">  
+            <table>
+
+                <tr ng-repeat="x in links | orderBy:'display'">
+                    <td>
+                        {{ $index + 1 }}
+                    </td>
+                    <td>
+                        <a href="{{ x.url }}" target="_blank">{{ x.display }}</a>
+                    </td>
+                </tr>
+
+            </table>
+        </md-card>
+    </md-content>

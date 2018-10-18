@@ -1,4 +1,4 @@
-var app = angular.module("projekt", ["ngMaterial", "ngRoute"]);
+var app = angular.module("projekt", ["ngMaterial", "ngRoute", "pascalprecht.translate"]);
 
 app.run(function($rootScope, $window, $location) {
     $rootScope.open = function(url){
@@ -10,7 +10,19 @@ app.run(function($rootScope, $window, $location) {
     }
 });
 
-app.config(function($mdThemingProvider, $routeProvider, $locationProvider){
+app.config(function($mdThemingProvider, $routeProvider, $locationProvider, $translateProvider){
+
+    $translateProvider.translations('en_US', {
+        SPRACHE: 'pick your language',
+        SPRACHE_DEUTSCH: "german",
+        SPRACHE_AMERICAN_ENGLISCH: "english"
+      });
+
+      $translateProvider.translations('de_DE', {
+        SPRACHE: 'Waehle deine Sprache',
+        SPRACHE_DEUTSCH: "deutsch",
+        SPRACHE_AMERICAN_ENGLISCH: "englisch"
+      });
 
     $routeProvider
         .when("/", {
@@ -27,11 +39,15 @@ app.config(function($mdThemingProvider, $routeProvider, $locationProvider){
         .when("/buch", {
             templateUrl: "/public/views/professoren.html"
         })
+        .when("/dhbw", {
+            templateUrl: "/public/views/dhbw.html"
+        })
         .when("/freizeit", {
             templateUrl: "/public/views/professoren.html"
         })
         .when("/links", {
-            templateUrl: "/public/views/links.html"
+            templateUrl: "/public/views/links.html",
+            controller: "linksCtrl"
         })
         .otherwise({
             redirectTo: "/"
@@ -82,16 +98,20 @@ app.config(function($mdThemingProvider, $routeProvider, $locationProvider){
 });
 
 
-app.controller("navigationCtrl", function($scope){
+app.controller("navigationCtrl", function($scope, $translate){
 
     $scope.topics = [
         { display: "Professoren", link: "/professoren" },
         { display: "Software", link: "/software" },
         { display: "Buchempfehlungen", link: "/buch" },
         { display: "Freizeit / Essen", link: "/freizeit" },
+        { display: "DHBW", link: "/dhbw" },
         { display: "Link Sammlung", link: "/links" }
     ];
 
+    $scope.$watch('language', function() {
+        $translate.use($scope.language);
+      });
 });
 
 
@@ -112,6 +132,18 @@ app.controller("profCtrl", function($scope, $http){
         console.log(response);
         
         $scope.profs = response.data;
+    });
+
+
+
+});
+
+
+app.controller("linksCtrl", function($scope, $http){
+
+    $http.get("/rest/links").then(function(response){
+        
+        $scope.links = response.data;
     });
 
 

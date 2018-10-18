@@ -9,7 +9,13 @@ module.exports = (app) => {
     async function getProfs(){
         var ProfModel = require("./models/profs.js");
         var data = await ProfModel.find({}, "-_id -__v").lean().exec();
-        console.log(data);
+        
+        return data;
+    }
+
+    async function getLinks(){
+        var LinkModel = require("./models/links.js");
+        var data = await LinkModel.find({}, "-_id -__v").lean().exec();
         
         return data;
     }
@@ -17,6 +23,14 @@ module.exports = (app) => {
     router.use("/rest/profs", async function(req, res){
 
         var data = await getProfs();
+        res.send(data);
+    
+    });
+    
+
+    router.use("/rest/links", async function(req, res){
+
+        var data = await getLinks();
         res.send(data);
     
     });
