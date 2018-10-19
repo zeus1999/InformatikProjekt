@@ -4,9 +4,10 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="./public/assets/angular/angular.min.js"></script>
+    <script src="./public/assets/angular/angular.js"></script>
     <script src="./public/assets/angular-aria/angular-aria.min.js"></script>
     <script src="./public/assets/angular-animate/angular-animate.min.js"></script>
+    <script src="./public/assets/angular-cookies/angular-cookies.min.js"></script>
     <script src="./public/assets/angular-route/angular-route.min.js"></script>
     <script src="./public/assets/angular-material/angular-material.min.js"></script>
     <script src="./public/assets/angular-translate/dist/angular-translate.min.js"></script>
@@ -30,11 +31,11 @@
         </div>
       </md-toolbar>
 
-      <md-content md-theme="docs-dark" layout-gt-sm="row" layout-padding layout-align="end top">
+      <md-content md-theme="docs-dark" layout="row" layout-padding layout-align="end top" ng-controller="langCtrl" style="padding: 20px;  ">
           <md-input-container>
               <label>{{ 'SPRACHE' | translate }}</label>
               <md-select ng-model="language" style="min-width: 200px;">
-                  <md-option value="de_DE" selected="select"><img src="./public/src/images/lang/de_DE.png"><span class="md-padding">{{ 'SPRACHE_DEUTSCH' | translate }}</span></md-option>
+                  <md-option value="de_DE"><img src="./public/src/images/lang/de_DE.png"><span class="md-padding">{{ 'SPRACHE_DEUTSCH' | translate }}</span></md-option>
                   <md-option value="en_US"><img src="./public/src/images/lang/en_US.png"><span class="md-padding">{{ 'SPRACHE_AMERICAN_ENGLISCH' | translate }}</span></md-option>
               </md-select>
           </md-input-container>
