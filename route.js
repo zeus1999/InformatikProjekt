@@ -20,6 +20,34 @@ module.exports = (app) => {
         return data;
     }
 
+    async function getLang(lang){
+        var LangModel = require("./models/lang.js");
+        var data = await LangModel.find({}, "-_id -__v").lean().exec();
+        
+        var tmp = {};
+        for(var i = 0; i < data.length; i++){            
+            tmp[data[i].key] = data[i][lang];
+        }
+
+        return tmp;
+    }
+
+    router.use("/rest/lang/de", async function(req, res){
+
+        var data = await getLang("de_DE");
+        res.send(data);
+    
+    });
+    
+
+    router.use("/rest/lang/en", async function(req, res){
+
+        var data = await getLang("en_US");
+        res.send(data);
+    
+    });
+    
+
     router.use("/rest/profs", async function(req, res){
 
         var data = await getProfs();

@@ -27,11 +27,12 @@ app.controller("langCtrl", function($scope, $cookies, $translate){
 app.config(function($mdThemingProvider, $routeProvider, $locationProvider, $translateProvider){
 
 
-    sendData("./public/src/lang/locale-en.json", function(result){
+    // sendData("./public/src/lang/locale-en.json", function(result){
+    sendData("/rest/lang/en", function(result){
         $translateProvider.translations('en_US', result);
     });
 
-    sendData("./public/src/lang/locale-de.json", function(result){
+    sendData("rest/lang/de", function(result){
         $translateProvider.translations('de_DE', result);
     });
     
