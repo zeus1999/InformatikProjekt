@@ -16,9 +16,6 @@ app.use("/public", express.static("public"));
 //route
 app.use("/", route);
 
-
-//test for git
-
 //socket server
 require("./socket.js")(io);
 
