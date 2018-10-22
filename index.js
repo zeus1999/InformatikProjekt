@@ -15,7 +15,7 @@ app.use("/public", express.static("public"));
 
 //route
 app.use("/", route);
-a
+
 //socket server
 require("./socket.js")(io);
 
