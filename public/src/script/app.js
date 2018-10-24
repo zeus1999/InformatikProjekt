@@ -11,6 +11,12 @@ app.run(function($rootScope, $window, $location, $translate, $cookies){
     }
 
 
+
+    $rootScope.$on("$locationChangeStart", function(event, next, current) { 
+        $rootScope.cR = $location.path();
+    });
+
+
 });
 
 app.controller("langCtrl", function($scope, $cookies, $translate){

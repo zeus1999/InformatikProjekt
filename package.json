@@ -20,6 +20,7 @@
     "connect-busboy": "0.0.2",
     "express": "^4.16.4",
     "fs": "0.0.1-security",
+    "jsdom": "^12.2.0",
     "mongoose": "^5.3.2",
     "path": "^0.12.7",
     "socket.io": "^2.1.1"

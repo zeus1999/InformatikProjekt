@@ -32,6 +32,26 @@ module.exports = (app) => {
         return tmp;
     }
 
+    const sendRequest = function(url){
+        return new Promise((resolve, reject) => {
+          const lib = url.startsWith('https') ? require('https') : require('http');
+          const request = lib.get(url, (response) => {
+            if (response.statusCode < 200 || response.statusCode > 299) {
+               reject(new Error('Failed to load page, status code: ' + response.statusCode));
+             }
+            // temporary data holder
+            const body = [];
+            // on every content chunk, push it to the data array
+            response.on('data', (chunk) => body.push(chunk));
+            // we are done, resolve promise with those joined chunks
+            response.on('end', () => resolve(body.join('')));
+          });
+          // handle connection errors of the request
+          request.on('error', (err) => reject(err))
+          })
+      };
+      
+
     router.use("/rest/lang/de", async function(req, res){
 
         var data = await getLang("de_DE");
@@ -61,6 +81,23 @@ module.exports = (app) => {
         var data = await getLinks();
         res.send(data);
     
+    });
+
+
+    router.use("/rest/kurse", async function(req, res){
+        const jsdom = require("jsdom");
+        const { JSDOM } = jsdom;
+
+        
+        var content = await sendRequest("https://vorlesungsplan.dhbw-mannheim.de/index.php?action=list&gid=3067001");
+        
+        const dom = new JSDOM(content);
+
+        var jahr = dom.window.document.querySelectorAll("[]")
+        
+        res.send(content);
+        
+
     });
     
 

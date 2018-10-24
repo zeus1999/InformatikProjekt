@@ -12,7 +12,7 @@
                 <table>
                     <tr ng-repeat="x in links | orderBy:'display'">
                         <td>
-                            {{ $index + 1 }}
+                            {{ $index + 1 }}.&nbsp;
                         </td>
                         <td>
                             <a href="{{ x.url }}" target="_blank">{{ x.display | translate }}</a>
