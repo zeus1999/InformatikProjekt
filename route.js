@@ -20,6 +20,14 @@ module.exports = (app) => {
         return data;
     }
 
+
+    async function getQuick(){
+        var LinkModel = require("./models/links.js");
+        var data = await LinkModel.find({ quick: true }, "-_id -__v").lean().exec();
+        
+        return data;
+    }
+
     async function getLang(lang){
         var LangModel = require("./models/lang.js");
         var data = await LangModel.find({}, "-_id -__v").lean().exec();
@@ -39,7 +47,6 @@ module.exports = (app) => {
             if (response.statusCode < 200 || response.statusCode > 299) {
                reject(new Error('Failed to load page, status code: ' + response.statusCode));
              }
-            // temporary data holder
             const body = [];
             // on every content chunk, push it to the data array
             response.on('data', (chunk) => body.push(chunk));
@@ -83,19 +90,59 @@ module.exports = (app) => {
     
     });
 
+    
+
+    router.use("/rest/quick", async function(req, res){
+
+        var data = await getQuick();
+        res.send(data);
+    
+    });
+
 
     router.use("/rest/kurse", async function(req, res){
         const jsdom = require("jsdom");
         const { JSDOM } = jsdom;
+        var serializeDocument = require("jsdom").serializeDocument;
 
         
         var content = await sendRequest("https://vorlesungsplan.dhbw-mannheim.de/index.php?action=list&gid=3067001");
         
         const dom = new JSDOM(content);
 
-        var jahr = dom.window.document.querySelectorAll("[]")
+        var jahr = dom.window.document.querySelectorAll("div.ui-grid-e [class^='ui-block']");
         
-        res.send(content);
+        var kurse = [];
+
+        for(var i = 0; i < jahr.length; i++){
+
+            var bezeichnung = jahr[i].querySelector("h1").innerHTML;
+
+
+            var kurs = {};
+            kurs.bezeichnung = bezeichnung;
+
+            var subkurse = [];
+
+            var subkurseElemente = jahr[i].querySelectorAll("a.cal-user");
+            console.log(subkurseElemente.length);
+            
+            for(var j = 0; j < subkurseElemente.length; j++){          
+                console.log(serializeDocument(subkurseElemente[i]));
+                      
+                subkurse.push({ link: subkurseElemente[i].getAttribute("href") })
+            }
+
+            //, link: subkurseElemente[i].getAttribute("href")
+
+            kurs.subkurse = subkurse;
+            
+            kurse.push(kurs);
+
+
+        }
+
+        res.send(kurse);
         
 
     });

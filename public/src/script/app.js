@@ -1,19 +1,50 @@
 var app = angular.module("projekt", ["ngMaterial", "ngCookies", "ngRoute", "pascalprecht.translate"]);
 
+app.filter("keyboardShortcut", function($window){
+    return function(str){
+        if(!str) return;
+        var keys = str.split("-");
+        var isOSX = /Mac OS X/.test($window.navigator.userAgent);
 
-app.run(function($rootScope, $window, $location, $translate, $cookies){
+        var separator = (!isOSX || keys.length > 2) ? "+" : "";
+
+        var abbreviations = {
+            M: isOSX ? "⌘" : "Ctrl",
+            A: isOSX ? "Option" : "Alt",
+            S: "Shift"
+        };
+
+        return keys.map(function(key, index){
+            var last = index === keys.length - 1;
+            return last ? key : abbreviations[key];
+        }).join(separator);
+    };
+})
+
+
+app.run(function($rootScope, $window, $location, $http){
+    
+    //open in tab
     $rootScope.open = function(url){
         $window.location.href = url;
     }
 
+    //open route
     $rootScope.route = function(url){
         $location.path(url);
     }
 
-
+    //open link in new tab
+    $rootScope.openUrl = function(url){
+        $window.open(url, "_blank");
+    }
 
     $rootScope.$on("$locationChangeStart", function(event, next, current) { 
         $rootScope.cR = $location.path();
+    });
+
+    $http.get("/rest/quick").then(function(response){        
+        $rootScope.quick = response.data;
     });
 
 

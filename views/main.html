@@ -151,19 +151,13 @@
           </md-menu>
           <md-menu>
             <button ng-click="$mdMenu.open()">
-              quick links
+                {{ "NAV_QUICK" | translate }}
             </button>
             <md-menu-content>
-              <md-menu-item>
-                <md-button ng-click="ctrl.sampleAction('bold', $event)">
-                  Vorlesungsplan
-                  <span class="md-alt-text"> {{ 'V' }}</span>
-                </md-button>
-              </md-menu-item>
-              <md-menu-item>
-                <md-button>
-                  Mensa Plan
-                  <span class="md-alt-text">{{ 'M' }}</span>
+              <md-menu-item ng-repeat="x in quick | orderBy: x.display">
+                <md-button ng-click="openUrl(x.url)">
+                  {{ x.display | translate }}
+                  <span class="md-alt-text"> {{ x.sub }}</span>
                 </md-button>
               </md-menu-item>
               <md-menu-divider></md-menu-divider>
