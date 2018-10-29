@@ -1,14 +1,53 @@
 var app = angular.module("projekt", ["ngMaterial", "ngCookies", "ngRoute", "pascalprecht.translate"]);
 
+app.filter("keyboardShortcut", function($window){
+    return function(str){
+        if(!str) return;
+        var keys = str.split("-");
+        var isOSX = /Mac OS X/.test($window.navigator.userAgent);
 
-app.run(function($rootScope, $window, $location, $translate, $cookies){
+        var separator = (!isOSX || keys.length > 2) ? "+" : "";
+
+        var abbreviations = {
+            M: isOSX ? "⌘" : "Ctrl",
+            A: isOSX ? "Option" : "Alt",
+            S: "Shift"
+        };
+
+        return keys.map(function(key, index){
+            var last = index === keys.length - 1;
+            return last ? key : abbreviations[key];
+        }).join(separator);
+    };
+})
+
+
+app.run(function($rootScope, $window, $location, $http, $cookies){
+    
+    //open in tab
     $rootScope.open = function(url){
         $window.location.href = url;
     }
 
+    //open route
     $rootScope.route = function(url){
         $location.path(url);
     }
+
+    $rootScope.kurs = $cookies.get("course") || "-";
+
+    //open link in new tab
+    $rootScope.openUrl = function(url){
+        $window.open(url, "_blank");
+    }
+
+    $rootScope.$on("$locationChangeStart", function(event, next, current) { 
+        $rootScope.cR = $location.path();
+    });
+
+    $http.get("/rest/quick").then(function(response){        
+        $rootScope.quick = response.data;
+    });
 
 
 });
@@ -112,6 +151,64 @@ app.config(function($mdThemingProvider, $routeProvider, $locationProvider, $tran
 
 });
 
+
+app.controller("kursDialogCtrl", function($scope, $cookies, $mdDialog, $http, $timeout, $rootScope){
+
+    $scope.age = "";
+    $scope.course = "";
+
+    $scope.kurs = "";
+
+    $http.get("/rest/kurse").then(function(response){
+        $scope.kurse = response.data;        
+    });
+
+    $scope.changeYear = function(){
+        
+        if($scope.age){
+
+            for(var i = 0; i < $scope.kurse.length; i++){
+
+
+                if($scope.kurse[i].bezeichnung == $scope.age){
+                    $scope.subkurse = $scope.kurse[i];                    
+                }
+            }
+
+        }
+
+    }
+    $scope.updateCourse = function(){
+        $rootScope.kurs = $cookies.get("course");
+    }
+    
+    $scope.saveCourse = function(){
+        $cookies.put("course", $scope.age + "-" + $scope.course);
+        $scope.kurs = $cookies.get("course");
+
+        $timeout(function(){
+            $scope.updateCourse();
+            $mdDialog.cancel();
+        }, 250);
+    }
+
+   
+
+    $scope.updateCourse();
+});
+
+
+app.controller("navCtrl", function($scope, $cookies, $mdDialog, $http, $timeout){
+
+    $scope.openDialog = function(){
+
+        $mdDialog.show({
+            controller: "kursDialogCtrl",
+            templateUrl: "/public/views/course.tpl.html"
+        });
+
+    };
+});
 
 app.controller("navigationCtrl", function($scope){
 
