@@ -8,6 +8,7 @@ const { JSDOM } = jsdom;
 
 
 async function getKurse(){
+    
     var res = await fetch("https://vorlesungsplan.dhbw-mannheim.de/index.php?action=list&gid=3067001");
     var content = await res.text();
     //console.log(content);
@@ -49,7 +50,7 @@ async function getKurse(){
     }
 
 
-    return kurse;
+    return kurse || [];
 }
 
 var tasks = {};
@@ -108,7 +109,8 @@ var kurseSync = async function(){
 
 };
 
-tasks.addTask("kurseSync", kurseSync, { minutes: [0, 30]});
+
+tasks.addTask("kurseSync", kurseSync, { second: [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]});
 
 
 module.exports = tasks;
