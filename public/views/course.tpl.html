@@ -1,0 +1,29 @@
+<md-content class="md-padding" style="width: 50vw;">
+
+    <br><br>
+
+    <span class="md-title md-padding">{{ "COURSE_PICK" | translate }}</span>
+
+    <div class="md-padding">
+        <md-input-container class="md-block">
+            <label>{{ "COURSE_PICK_YEAR" | translate }}</label>
+            <md-select ng-model="age" ng-change="changeYear()">
+                <md-option ng-repeat="x in kurse" ng-value="x.bezeichnung">{{ x.bezeichnung }}</md-option>
+            </md-select>
+        </md-input-container>
+
+        <br>
+
+        <md-input-container ng-show="age" class="md-block">
+            <label>{{ "COURSE_PICK" | translate }}</label>
+            <md-select ng-model="course">
+                <md-option ng-repeat="x in subkurse.subkurse" ng-value="x.name">{{ x.name }}</md-option>
+            </md-select>
+        </md-input-container>
+
+        <br>
+
+        <md-button ng-click="saveCourse()" ng-disabled="(age == '' || course == '')" class="md-primary md-raised">{{ "SAVE" | translate }} </md-button>
+    </div>
+
+</md-content>

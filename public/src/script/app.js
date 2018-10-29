@@ -22,7 +22,7 @@ app.filter("keyboardShortcut", function($window){
 })
 
 
-app.run(function($rootScope, $window, $location, $http){
+app.run(function($rootScope, $window, $location, $http, $cookies){
     
     //open in tab
     $rootScope.open = function(url){
@@ -33,6 +33,8 @@ app.run(function($rootScope, $window, $location, $http){
     $rootScope.route = function(url){
         $location.path(url);
     }
+
+    $rootScope.kurs = $cookies.get("course") || "-";
 
     //open link in new tab
     $rootScope.openUrl = function(url){
@@ -149,6 +151,64 @@ app.config(function($mdThemingProvider, $routeProvider, $locationProvider, $tran
 
 });
 
+
+app.controller("kursDialogCtrl", function($scope, $cookies, $mdDialog, $http, $timeout, $rootScope){
+
+    $scope.age = "";
+    $scope.course = "";
+
+    $scope.kurs = "";
+
+    $http.get("/rest/kurse").then(function(response){
+        $scope.kurse = response.data;        
+    });
+
+    $scope.changeYear = function(){
+        
+        if($scope.age){
+
+            for(var i = 0; i < $scope.kurse.length; i++){
+
+
+                if($scope.kurse[i].bezeichnung == $scope.age){
+                    $scope.subkurse = $scope.kurse[i];                    
+                }
+            }
+
+        }
+
+    }
+    $scope.updateCourse = function(){
+        $rootScope.kurs = $cookies.get("course");
+    }
+    
+    $scope.saveCourse = function(){
+        $cookies.put("course", $scope.age + "-" + $scope.course);
+        $scope.kurs = $cookies.get("course");
+
+        $timeout(function(){
+            $scope.updateCourse();
+            $mdDialog.cancel();
+        }, 250);
+    }
+
+   
+
+    $scope.updateCourse();
+});
+
+
+app.controller("navCtrl", function($scope, $cookies, $mdDialog, $http, $timeout){
+
+    $scope.openDialog = function(){
+
+        $mdDialog.show({
+            controller: "kursDialogCtrl",
+            templateUrl: "/public/views/course.tpl.html"
+        });
+
+    };
+});
 
 app.controller("navigationCtrl", function($scope){
 

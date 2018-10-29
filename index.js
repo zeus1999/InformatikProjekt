@@ -8,6 +8,7 @@ var io = require("socket.io")(server);
 
 var route = require("./route.js")(app);
 var config = require("./config.js");
+var sched = require("./scheduled-tasks");
 
 
 //static folder

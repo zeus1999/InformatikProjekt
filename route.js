@@ -1,4 +1,5 @@
 var express = require("express");
+var fs = require("fs");
 var router = express.Router();
 var mongoose = require("mongoose");
 var mongoDB = "mongodb://127.0.0.1/student_helper";
@@ -101,50 +102,7 @@ module.exports = (app) => {
 
 
     router.use("/rest/kurse", async function(req, res){
-        const jsdom = require("jsdom");
-        const { JSDOM } = jsdom;
-        var serializeDocument = require("jsdom").serializeDocument;
-
-        
-        var content = await sendRequest("https://vorlesungsplan.dhbw-mannheim.de/index.php?action=list&gid=3067001");
-        
-        const dom = new JSDOM(content);
-
-        var jahr = dom.window.document.querySelectorAll("div.ui-grid-e [class^='ui-block']");
-        
-        var kurse = [];
-
-        for(var i = 0; i < jahr.length; i++){
-
-            var bezeichnung = jahr[i].querySelector("h1").innerHTML;
-
-
-            var kurs = {};
-            kurs.bezeichnung = bezeichnung;
-
-            var subkurse = [];
-
-            var subkurseElemente = jahr[i].querySelectorAll("a.cal-user");
-            console.log(subkurseElemente.length);
-            
-            for(var j = 0; j < subkurseElemente.length; j++){          
-                console.log(serializeDocument(subkurseElemente[i]));
-                      
-                subkurse.push({ link: subkurseElemente[i].getAttribute("href") })
-            }
-
-            //, link: subkurseElemente[i].getAttribute("href")
-
-            kurs.subkurse = subkurse;
-            
-            kurse.push(kurs);
-
-
-        }
-
-        res.send(kurse);
-        
-
+        res.send(fs.readFileSync("./tmp/kurs.html", "utf8"));
     });
     
 

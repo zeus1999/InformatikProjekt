@@ -30,8 +30,7 @@
           </h2>
         </div>
       </md-toolbar>
-
-      <md-menu-bar>
+      <md-menu-bar ng-controller="navCtrl">
           <button ng-click="route('/')" ng-if="cR != '/'">
             ←
           </button>
@@ -164,6 +163,19 @@
               <md-menu-item><md-button>clear</md-button></md-menu-item>
             </md-menu-content>
           </md-menu>
+          <md-menu>
+            <button ng-click="$mdMenu.open()">
+                {{ "NAV_CONFIG" | translate }}
+            </button>
+            <md-menu-content>
+              <md-menu-item>
+                <md-button ng-click="openDialog()">
+                  {{ "CONFIG_COURSE" | translate }}
+                  <span class="md-alt-text">{{ kurs }}</span>
+                </md-button>
+              </md-menu-item>
+            </md-menu-content>
+          </md-menu>
         </md-menu-bar>
 
       <md-content md-theme="docs-dark" layout="row" layout-padding layout-align="end top" ng-controller="langCtrl" style="padding: 20px;  ">
@@ -175,7 +187,6 @@
               </md-select>
           </md-input-container>
       </md-content>
-
       <div ng-view></div>
      <!-- <md-menu-bar>
         <md-menu>
