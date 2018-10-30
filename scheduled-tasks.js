@@ -21,7 +21,7 @@ async function getKurse(){
 
     var jahr = dom.window.document.querySelectorAll("div.ui-grid-e [class^='ui-block']");
     
-    var kurse = [];
+    var kurse = {};
 
     for(var i = 0; i < jahr.length; i++){
 
@@ -29,22 +29,21 @@ async function getKurse(){
 
 
         var kurs = {};
-        kurs.bezeichnung = bezeichnung;
 
-        var subkurse = [];
+        var subkurse = {};
 
         var subkurseElemente = jahr[i].querySelectorAll("a.cal-user");
         //console.log(subkurseElemente.length);
         
         for(var j = 0; j < subkurseElemente.length; j++){
-            subkurse.push({ link: subkurseElemente[j].getAttribute("href"), name: subkurseElemente[j].innerHTML })
+            subkurse[subkurseElemente[j].innerHTML] = { link: subkurseElemente[j].getAttribute("href") };
         }
 
         //, link: subkurseElemente[i].getAttribute("href")
 
         kurs.subkurse = subkurse;
         
-        kurse.push(kurs);
+        kurse[bezeichnung] = kurs;
 
 
     }
@@ -92,7 +91,10 @@ var kurseSync = async function(){
     
     var kurse = await getKurse();
 
-    if(kurse.length != 0){
+    console.log(kurse);
+    
+
+    if(kurse != []){
 
         fs.writeFileSync("./tmp/kurs.html", JSON.stringify(kurse), "utf8");
     
@@ -110,7 +112,7 @@ var kurseSync = async function(){
 };
 
 
-tasks.addTask("kurseSync", kurseSync, { second: [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]});
+//tasks.addTask("kurseSync", kurseSync, { second: [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]});
 
 
 module.exports = tasks;

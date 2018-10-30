@@ -21,6 +21,25 @@ module.exports = (app) => {
         return data;
     }
 
+    async function getSpruch(){
+        var SpruchModel = require("./models/spruch.js");
+        //var data = await LinkModel.find({}, "-_id -__v").lean().exec();
+        
+        //var data = await SpruchModel();
+
+        var counter = await SpruchModel.countDocuments();
+        //console.log(counter);
+        
+          var random = Math.floor(Math.random() * counter);
+          
+          var dataset = await SpruchModel.findOne().skip(random).exec();
+          
+          console.log(dataset);
+          
+
+        return dataset;
+    }
+
 
     async function getQuick(){
         var LinkModel = require("./models/links.js");
@@ -71,6 +90,15 @@ module.exports = (app) => {
     router.use("/rest/lang/en", async function(req, res){
 
         var data = await getLang("en_US");
+        res.send(data);
+    
+    });
+    
+    
+
+    router.use("/rest/spruch", async function(req, res){
+
+        var data = await getSpruch();
         res.send(data);
     
     });

@@ -29,6 +29,13 @@ app.run(function($rootScope, $window, $location, $http, $cookies){
         $window.location.href = url;
     }
 
+    $http.get("/rest/kurse").then(function(response){
+        $rootScope.kurse = response.data;      
+        console.log($rootScope.kurse);
+        
+    });
+
+
     //open route
     $rootScope.route = function(url){
         $location.path(url);
@@ -45,10 +52,27 @@ app.run(function($rootScope, $window, $location, $http, $cookies){
         $rootScope.cR = $location.path();
     });
 
-    $http.get("/rest/quick").then(function(response){        
+    $rootScope.saveUrl = "";
+
+    $rootScope.quick = [];
+    $http.get("/rest/quick").then(function(response){
         $rootScope.quick = response.data;
+        
+    
+        for(var i = 0; i < $rootScope.quick.length; i++){
+            if($rootScope.quick[i].display == "LINK_PLAN"){
+                $rootScope.saveUrl = $rootScope.quick[i].url;
+            }
+        }
+
     });
 
+    $rootScope.$watch("kurs", function(){
+
+        for(var i = 0; i < $rootScope.quick.length; i++){
+         $rootScope.quick[i].url = $rootScope.saveUrl +"/"+$rootScope.kurse[$rootScope.kurs.split("-")[0]].subkurse[$rootScope.kurs.split("-")[1]].link;
+        }
+    })
 
 });
 
@@ -152,26 +176,24 @@ app.config(function($mdThemingProvider, $routeProvider, $locationProvider, $tran
 });
 
 
-app.controller("kursDialogCtrl", function($scope, $cookies, $mdDialog, $http, $timeout, $rootScope){
+app.controller("kursDialogCtrl", function($scope, $cookies, $mdDialog, $rootScope, $timeout, $rootScope){
 
     $scope.age = "";
     $scope.course = "";
 
     $scope.kurs = "";
 
-    $http.get("/rest/kurse").then(function(response){
-        $scope.kurse = response.data;        
-    });
 
     $scope.changeYear = function(){
         
         if($scope.age){
 
-            for(var i = 0; i < $scope.kurse.length; i++){
+            for(var i = 0; i < $rootScope.kurse.length; i++){
 
 
-                if($scope.kurse[i].bezeichnung == $scope.age){
-                    $scope.subkurse = $scope.kurse[i];                    
+                if($rootScope.kurse[i].bezeichnung == $scope.age){
+                    $scope.subkurse = $rootScope.kurse[i];  
+                                      
                 }
             }
 
@@ -198,16 +220,33 @@ app.controller("kursDialogCtrl", function($scope, $cookies, $mdDialog, $http, $t
 });
 
 
+app.controller("spruchCtrl", function($scope, $http, $interval){
+
+    $interval(spruch, 10 * 1000);
+
+    function spruch(){
+        $http.get("/rest/spruch").then(function(response){
+            $scope.spruch = response.data.spruch + " - " + response.data.professor;
+        });
+    }
+
+    spruch();
+
+});
+
 app.controller("navCtrl", function($scope, $cookies, $mdDialog, $http, $timeout){
 
     $scope.openDialog = function(){
 
         $mdDialog.show({
             controller: "kursDialogCtrl",
-            templateUrl: "/public/views/course.tpl.html"
+            templateUrl: "/public/views/course.tpl.html",
+            scope: $scope,
+            preserveScope: true
         });
 
     };
+
 });
 
 app.controller("navigationCtrl", function($scope){
@@ -222,7 +261,7 @@ app.controller("navigationCtrl", function($scope){
     ];
 });
 
-
+/*
 app.controller("linksCtrl", function($scope){
 
     $scope.links = [
@@ -232,7 +271,7 @@ app.controller("linksCtrl", function($scope){
 
 
 });
-
+*/
 
 app.controller("profCtrl", function($scope, $http){
 

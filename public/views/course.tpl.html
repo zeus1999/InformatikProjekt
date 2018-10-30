@@ -4,11 +4,13 @@
 
     <span class="md-title md-padding">{{ "COURSE_PICK" | translate }}</span>
 
+
+
     <div class="md-padding">
         <md-input-container class="md-block">
             <label>{{ "COURSE_PICK_YEAR" | translate }}</label>
             <md-select ng-model="age" ng-change="changeYear()">
-                <md-option ng-repeat="x in kurse" ng-value="x.bezeichnung">{{ x.bezeichnung }}</md-option>
+                <md-option ng-repeat="(key, value) in kurse" ng-value="key">{{ key }}</md-option>
             </md-select>
         </md-input-container>
 
@@ -17,7 +19,7 @@
         <md-input-container ng-show="age" class="md-block">
             <label>{{ "COURSE_PICK" | translate }}</label>
             <md-select ng-model="course">
-                <md-option ng-repeat="x in subkurse.subkurse" ng-value="x.name">{{ x.name }}</md-option>
+                <md-option ng-repeat="(key, value) in kurse[age].subkurse" ng-value="key">{{ key }}</md-option>
             </md-select>
         </md-input-container>
 
