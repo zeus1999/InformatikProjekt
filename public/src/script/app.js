@@ -64,15 +64,18 @@ app.run(function($rootScope, $window, $location, $http, $cookies){
                 $rootScope.saveUrl = $rootScope.quick[i].url;
             }
         }
+        modifyLink();
 
     });
 
-    $rootScope.$watch("kurs", function(){
+    $rootScope.$watch("kurs", modifyLink);
 
+    function modifyLink(){
         for(var i = 0; i < $rootScope.quick.length; i++){
-         $rootScope.quick[i].url = $rootScope.saveUrl +"/"+$rootScope.kurse[$rootScope.kurs.split("-")[0]].subkurse[$rootScope.kurs.split("-")[1]].link;
+            $rootScope.quick[i].url = $rootScope.saveUrl +"/"+$rootScope.kurse[$rootScope.kurs.split("-")[0]].subkurse[$rootScope.kurs.split("-")[1]].link;
         }
-    })
+    }
+
 
 });
 
@@ -181,8 +184,6 @@ app.controller("kursDialogCtrl", function($scope, $cookies, $mdDialog, $rootScop
     $scope.age = "";
     $scope.course = "";
 
-    $scope.kurs = "";
-
 
     $scope.changeYear = function(){
         
@@ -206,7 +207,6 @@ app.controller("kursDialogCtrl", function($scope, $cookies, $mdDialog, $rootScop
     
     $scope.saveCourse = function(){
         $cookies.put("course", $scope.age + "-" + $scope.course);
-        $scope.kurs = $cookies.get("course");
 
         $timeout(function(){
             $scope.updateCourse();
