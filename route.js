@@ -33,9 +33,7 @@ module.exports = (app) => {
           var random = Math.floor(Math.random() * counter);
           
           var dataset = await SpruchModel.findOne().skip(random).exec();
-          
-          console.log(dataset);
-          
+        
 
         return dataset;
     }

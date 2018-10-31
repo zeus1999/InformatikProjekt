@@ -37,6 +37,11 @@ async function getKurse(){
         
         for(var j = 0; j < subkurseElemente.length; j++){
             subkurse[subkurseElemente[j].innerHTML] = { link: subkurseElemente[j].getAttribute("href") };
+
+
+            //fetch plan
+
+
         }
 
         //, link: subkurseElemente[i].getAttribute("href")
@@ -91,7 +96,6 @@ var kurseSync = async function(){
     
     var kurse = await getKurse();
 
-    console.log(kurse);
     
 
     if(kurse != []){
@@ -113,6 +117,7 @@ var kurseSync = async function(){
 
 
 //tasks.addTask("kurseSync", kurseSync, { second: [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]});
+tasks.addTask("kurseSync", kurseSync, { minute: [0, 30]});
 
 
 module.exports = tasks;
