@@ -41,6 +41,16 @@ async function getKurse(){
 
             //fetch plan
 
+            var t_d = await fetch("https://vorlesungsplan.dhbw-mannheim.de/"+ subkurseElemente[j].getAttribute("href") );
+            var con = await t_d.text();
+
+            //compute fetched data
+            var f_content = extractPlan(con);
+            var c_name = bezeichnung + "-" + subkurseElemente[j].innerHTML;
+
+            fs.writeFileSync("./tmp/" + c_name + ".html", f_content);
+
+
 
         }
 
@@ -117,7 +127,9 @@ var kurseSync = async function(){
 
 
 //tasks.addTask("kurseSync", kurseSync, { second: [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]});
-tasks.addTask("kurseSync", kurseSync, { minute: [0, 30]});
+tasks.addTask("kurseSync", kurseSync, { minute: [59]});
 
+
+kurseSync()
 
 module.exports = tasks;
