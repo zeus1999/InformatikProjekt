@@ -5,6 +5,70 @@ const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
  
 
+function len(a){
+    return a.length;
+}
+
+function print(a){
+    console.log(a);
+}
+
+async function extractPlan(a){
+
+    let output = {};
+
+
+    let adom = new JSDOM(a);
+    let document = adom.window.document;
+
+    let saeulen = document.querySelectorAll("div.ui-grid-e [class^='ui-block']");
+
+    for(var i = 0; i < saeulen.length; i++){
+        
+
+        let time = saeulen[i].querySelector("ul");
+        let timed = time.firstChild;
+
+        
+
+        let ex = timed.innerHTML.split(", ");
+        let day = ex[0];
+        let date = ex[1];
+        
+        output[date] = { day: day };
+
+        let tmp = [];
+
+        for(var j = 0; j < time.childNodes.length; j++){
+
+            if(j != 0){
+
+                let lec = {}
+
+                lec.time = time.childNodes[j].querySelector(".cal-time").innerHTML;
+                lec.title = time.childNodes[j].querySelector(".cal-title").innerHTML;
+                lec.res = time.childNodes[j].querySelector(".cal-res").innerHTML;
+
+                if(time.childNodes[j].querySelector(".cal-text") != null){
+                    lec.text = time.childNodes[j].querySelector(".cal-text").innerHTML;
+                }
+
+                tmp.push(lec);
+
+            }
+
+        }
+
+        output[date].lectures = tmp;
+
+        
+
+    }
+
+    return output;
+
+
+}
 
 
 async function getKurse(){
@@ -17,7 +81,7 @@ async function getKurse(){
     //var content = fs.readFileSync("1.html", "utf8");
     //console.log(content);
     
-    const dom = new JSDOM(content);
+    let dom = new JSDOM(content);
 
     var jahr = dom.window.document.querySelectorAll("div.ui-grid-e [class^='ui-block']");
     
@@ -44,8 +108,10 @@ async function getKurse(){
             var t_d = await fetch("https://vorlesungsplan.dhbw-mannheim.de/"+ subkurseElemente[j].getAttribute("href") );
             var con = await t_d.text();
 
+            var extr = await extractPlan(con);
+
             //compute fetched data
-            var f_content = extractPlan(con);
+            var f_content = JSON.stringify(extr);
             var c_name = bezeichnung + "-" + subkurseElemente[j].innerHTML;
 
             fs.writeFileSync("./tmp/" + c_name + ".html", f_content);
